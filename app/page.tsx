@@ -1,157 +1,100 @@
 import {
-  Activity,
-  ArrowUpRight,
+  ArrowRight,
   Boxes,
+  CheckCircle2,
   ChevronRight,
-  CircleHelp,
-  FileStack,
+  CircleAlert,
+  Clock3,
+  Cpu,
+  FileJson,
   Gauge,
-  GitFork,
-  MessageSquareWarning,
-  Mic,
+  MessageCircle,
   Play,
-  Plus,
-  Search,
   ShieldCheck,
-  TerminalSquare,
+  Sparkles,
   Users,
 } from 'lucide-react';
 
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { getDashboard } from '@/lib/records';
-
-const nav = [
-  { label: '总览', icon: Activity, active: true, href: '/' },
-  { label: '工作流', icon: Boxes, href: '/workflows' },
-  { label: '项目', icon: FileStack, href: '/projects' },
-  { label: '问题', icon: MessageSquareWarning, count: 3, href: '/issues' },
-  { label: '模型测评', icon: Gauge, href: '/#benchmarks' },
-  { label: '内测中心', icon: Users, href: '/#beta' },
-];
-
-const intents = [
-  { icon: Mic, title: '提交业务痛点', detail: '说 60 秒，自动整理场景与约束', meta: '语音或文字', href: '/new?type=issue' },
-  { icon: GitFork, title: '验证一个工作流', detail: '上传 JSON，记录模型与运行结果', meta: '工作流复现', href: '/new?type=workflow' },
-  { icon: TerminalSquare, title: '申请远程测试', detail: '用真实项目验证速度、效果与成本', meta: 'Siltok Pro', href: '/new?type=project' },
-];
-
-const pipeline = [
-  { label: '脚本理解', note: 'Qwen3 30B', state: 'done' },
-  { label: '分镜生成', note: '12 shots', state: 'done' },
-  { label: '视频推理', note: 'Wan2.2 FP8', state: 'active' },
-  { label: '结果筛选', note: '等待确认', state: 'waiting' },
-];
-
-const statusLabels: Record<string, string> = { triage: '待分诊', needs_info: '待补信息', reproduced: '已复现', in_progress: '处理中', planned: '进入版本', resolved: '已解决', closed: '已关闭' };
-
-function ProductMark() {
-  return (
-    <div className="product-mark" aria-label="Siltok Lab">
-      <span className="mark-glyph">S</span>
-      <span><strong>Siltok</strong><small>LAB</small></span>
-    </div>
-  );
-}
+import { getDashboard, listProjects, listWorkflows } from '@/lib/records';
 
 export const dynamic = 'force-dynamic';
 
+function Brand() {
+  return <a className="canvas-brand" href="/" aria-label="Siltok Lab 首页"><span className="brand-sigil">S</span><span><b>SILTOK</b><small>LAB</small></span></a>;
+}
+
+function SiteHeader() {
+  return <>
+    <div className="launch-ribbon"><span>●</span> Siltok AI Station 首批共创计划开放中 <a href="/#beta">查看测试权益 <ArrowRight /></a></div>
+    <header className="canvas-header">
+      <Brand />
+      <nav aria-label="主要导航"><a className="active" href="/">首页</a><a href="/projects">共创项目</a><a href="/workflows">工作流</a><a href="/issues">问题反馈</a><a href="/#benchmarks">模型实测</a></nav>
+      <div className="header-actions"><a className="quiet-action" href="/login"><MessageCircle /> 微信登录</a><a className="neon-action" href="/new?type=project">申请内测 <ArrowRight /></a></div>
+    </header>
+  </>;
+}
+
+const process = [
+  ['01', '带来真实任务', '短剧、电商或广告项目，不要求整理成完整报告。'],
+  ['02', '专人迁移工作流', '我们配置模型、节点与环境，把固定痛点写进设备。'],
+  ['03', '远程真机运行', '在 Siltok Pro 上记录速度、成片率、返工和失败模式。'],
+  ['04', '带走可用资产', '保留工作流、参数与对比结果，再决定租用或购买。'],
+];
+
+const statusText: Record<string, string> = { first_version: '第一版', real_delivery: '真实交付', paid: '已有付费', verified: '官方复现', draft: '等待验证' };
+
 export default async function Home() {
-  const dashboard = await getDashboard();
+  const [dashboard, projects, workflows] = await Promise.all([getDashboard(), listProjects(), listWorkflows()]);
+  const project = (projects[0] ?? {}) as Record<string, string | number | null>;
+  const workflow = (workflows[0] ?? {}) as Record<string, string | number | null>;
+  const issue = (dashboard.issues[0] ?? {}) as Record<string, string | number | null>;
   const run = (dashboard.run ?? {}) as Record<string, string | number | null>;
-  const recentIssues = dashboard.issues as Array<Record<string, string | number | null>>;
-  const totalOutputs = Number(run.total_outputs ?? 0);
-  const usableOutputs = Number(run.usable_outputs ?? 0);
-  const usableRate = totalOutputs ? Math.round((usableOutputs / totalOutputs) * 100) : 0;
-  return (
-    <main className="station-shell">
-      <header className="station-topbar">
-        <ProductMark />
-        <div className="command-search"><Search aria-hidden="true" /><span>搜索工作流、模型或问题</span><kbd>⌘ K</kbd></div>
-        <div className="topbar-actions">
-          <span className="system-status"><i /> 数据库与对象存储在线</span>
-          <Button className="create-button" render={<a href="/new?type=issue" />}><Plus /> 提交记录</Button>
-          <a className="avatar-button" href="/login" aria-label="打开登录页面">SG</a>
+  const total = Number(run.total_outputs ?? 0);
+  const usable = Number(run.usable_outputs ?? 0);
+
+  return <main className="canvas-site">
+    <SiteHeader />
+
+    <section className="cinema-hero">
+      <div className="hero-copy">
+        <span className="hero-kicker"><Sparkles /> 为真实创作者而建的本地 AI 共创站</span>
+        <h1>把真实工作流，<br />做进你的 <em>AI 主机</em></h1>
+        <p>不是让你替我们测试技术。你带来一个正在卡住的商业任务，我们负责迁移、跑通并留下可复用的工作流。</p>
+        <div className="hero-actions"><a className="hero-primary" href="/new?type=project">申请远程测试 <ArrowRight /></a><a className="hero-secondary" href="/workflows"><Play fill="currentColor" /> 查看真实工作流</a></div>
+        <div className="hero-promises"><span><CheckCircle2 /> 不要求好评</span><span><ShieldCheck /> 素材默认私密</span><span><FileJson /> 工作流可带走</span></div>
+      </div>
+
+      <div className="hero-stage" aria-label="Siltok 工作流运行预览">
+        <img src="/og.png" alt="Siltok Lab 本地 AI 工作流共创平台" />
+        <div className="stage-console">
+          <div><span className="live-dot" /> LIVE RUN</div><strong>{String(run.model_name ?? 'Wan2.2 FP8')}</strong><small>{String(run.hardware_sku ?? 'Siltok Pro')} · {String(run.engine_version ?? 'Silitok Speed')}</small>
         </div>
-      </header>
+        <div className="stage-metric"><span>可用片段</span><strong>{usable}/{total || 12}</strong><small>每一次失败也会被记录</small></div>
+      </div>
+    </section>
 
-      <aside className="station-sidebar">
-        <nav aria-label="产品导航">
-          <span className="nav-label">工作台</span>
-          {nav.map((item) => {
-            const Icon = item.icon;
-            return (
-              <a className={item.active ? 'nav-item active' : 'nav-item'} href={item.href} key={item.label}>
-                <Icon /><span>{item.label}</span>{item.count ? <b>{item.count}</b> : null}
-              </a>
-            );
-          })}
-        </nav>
-        <section className="test-program">
-          <div className="program-heading"><ShieldCheck /><span>PRO 内测计划</span></div>
-          <strong>第 2 / 4 周</strong>
-          <div className="program-track"><span /></div>
-          <p>本周还需完成 2 次真实项目运行</p>
-          <a href="#">查看测试任务 <ChevronRight /></a>
-        </section>
-        <div className="sidebar-footer"><CircleHelp /><span><strong>遇到问题？</strong><small>创建一条可复现记录</small></span></div>
-      </aside>
+    <section className="proof-strip" aria-label="产品价值"><div><Cpu /><span><b>本地运行</b><small>数据不离开设备</small></span></div><div><Gauge /><span><b>真实实测</b><small>速度、质量与失败率</small></span></div><div><Boxes /><span><b>专属工作流</b><small>由团队迁移和优化</small></span></div><div><Users /><span><b>灵活使用</b><small>远程、租用与置换</small></span></div></section>
 
-      <section className="station-content">
-        <div className="content-heading">
-          <div><span className="overline">2026.09.02 · 内测工作台</span><h1>今天先解决哪一个<br />真实问题？</h1></div>
-          <div className="heading-summary"><span>已沉淀证据</span><strong>{dashboard.counts.workflows + dashboard.counts.projects} <small>项</small></strong><p>{dashboard.counts.openIssues} 个问题等待闭环</p></div>
-        </div>
+    <section className="community-section" id="community">
+      <header className="section-title"><div><span>SILTOK CREATOR COMMUNITY</span><h2>正在发生的共创现场</h2><p>真实项目、可复现工作流和不被隐藏的负面反馈。</p></div><a href="/projects">进入共创广场 <ChevronRight /></a></header>
+      <div className="community-tabs"><button className="active">精选</button><button>短剧制作</button><button>电商素材</button><button>模型实测</button><button>失败复盘</button><button>招募中</button></div>
+      <div className="story-grid">
+        <article className="feature-story">
+          <div className="story-visual"><span className="story-label">{statusText[String(project.status)] ?? '真实项目'}</span><div className="shot-track"><i /><i /><i /><i /><i /></div><div className="story-model">WAN 2.2 <small>× SILTOK SPEED</small></div></div>
+          <div className="story-body"><span>{String(project.scenario ?? 'AI 短剧')} · 共创项目</span><h3>{String(project.title ?? '把一条真实短剧工作流迁移到本地')}</h3><p>{String(project.summary ?? '围绕真实交付目标验证角色一致性、生成速度与废片率。')}</p><footer><b>SG</b><span>工作流 {Number(project.workflow_count ?? 1)}</span><span>问题 {Number(project.issue_count ?? 0)}</span><a href="/projects">查看项目 <ArrowRight /></a></footer></div>
+        </article>
+        <article className="compact-story workflow-story"><div className="compact-icon"><Play fill="currentColor" /></div><span>{statusText[String(workflow.status)] ?? '官方复现'}</span><h3>{String(workflow.title ?? '短剧分镜转视频 · 角色一致性')}</h3><p>{String(workflow.model_name ?? 'Wan2.2 FP8')} · {String(workflow.hardware_sku ?? 'Siltok Pro')}</p><div className="mini-spec"><span><b>{Number(workflow.run_count ?? 1)}</b> 次真实运行</span><span><b>v{Number(workflow.latest_version ?? 1)}</b> 当前版本</span></div><a href="/workflows">打开工作流 <ChevronRight /></a></article>
+        <article className="compact-story issue-story"><div className="compact-icon"><CircleAlert /></div><span>失败也值得被看见</span><h3>{String(issue.title ?? '记录一个影响交付的真实问题')}</h3><p>{String(issue.category ?? '效果')} · {String(issue.severity ?? 'P1')} · 已进入处理队列</p><blockquote>“我们不要求正面评价。能复现的问题，才有机会变成产品能力。”</blockquote><a href="/issues">查看问题进展 <ChevronRight /></a></article>
+      </div>
+    </section>
 
-        <section className="intent-grid" aria-label="快速开始">
-          {intents.map((intent, index) => {
-            const Icon = intent.icon;
-            return (
-              <a className="intent-card" href={intent.href} key={intent.title}>
-                <span className="intent-index">0{index + 1}</span><span className="intent-icon"><Icon /></span>
-                <strong>{intent.title}</strong><p>{intent.detail}</p><span className="intent-meta">{intent.meta}<ArrowUpRight /></span>
-              </a>
-            );
-          })}
-        </section>
+    <section className="station-section" id="benchmarks">
+      <div className="station-copy"><span>SILTOK AI STATION</span><h2>一套软件，适配两种创作强度。</h2><p>Lite 面向个人创作者，Pro 面向专业团队。系统自动选择模型精度、显存调度和任务策略，不让用户面对“显存不够”的错误提示。</p><a href="/new?type=project">用你的任务判断适合哪一款 <ArrowRight /></a></div>
+      <div className="sku-compare"><article><header><span>LITE</span><b>个人创作者</b></header><strong>16GB</strong><small>RTX 5060 Ti</small><ul><li>单任务优先</li><li>自动量化与卸载</li><li>万元级目标</li></ul></article><article className="pro"><header><span>PRO</span><b>工作室</b></header><strong>24GB</strong><small>RTX 5090D v2</small><ul><li>更高规格生成</li><li>更从容的动态调度</li><li>真实项目远程测试</li></ul></article></div>
+    </section>
 
-        <div className="workspace-grid">
-          <section className="run-evidence">
-            <div className="panel-heading">
-              <div><span className="panel-kicker">RUN EVIDENCE</span><h2>最近一次运行证据</h2></div>
-              <Badge className="verified-badge"><ShieldCheck /> 官方验证</Badge>
-            </div>
-            <div className="run-title-row">
-              <div className="model-emblem"><Play fill="currentColor" /></div>
-              <div><strong>{run.workflow_title || '等待第一条真实运行'} · v{run.latest_version || 1}</strong><p>{run.model_name || '未记录模型'} · {run.hardware_sku || '未记录硬件'} · 已持久化</p></div>
-              <button aria-label="打开运行详情"><ArrowUpRight /></button>
-            </div>
-            <div className="pipeline" aria-label="工作流运行阶段">
-              {pipeline.map((step) => (
-                <div className={`pipeline-step ${step.state}`} key={step.label}>
-                  <span className="step-signal"><i /></span><strong>{step.label}</strong><small>{step.note}</small>
-                </div>
-              ))}
-            </div>
-            <div className="run-metrics">
-              <div><span>首帧时间</span><strong>{Number(run.first_frame_seconds ?? 0).toFixed(1)}<small>s</small></strong><em>真实运行</em></div>
-              <div><span>峰值显存</span><strong>{Number(run.peak_vram_gb ?? 0).toFixed(1)}<small>GB</small></strong><em>{run.hardware_sku || '未记录'}</em></div>
-              <div><span>有效片段</span><strong>{usableOutputs}<small>/{totalOutputs}</small></strong><em>{usableRate}%</em></div>
-              <div><span>运行状态</span><strong className="metric-state">{run.status === 'running' ? '生成中' : run.status || '待运行'}</strong><em>{run.engine_version || '引擎待记录'}</em></div>
-            </div>
-          </section>
+    <section className="beta-section" id="beta"><header><span>REMOTE BETA</span><h2>测试不是填一张长表，<br />而是一起完成一次真实交付。</h2></header><div className="beta-steps">{process.map(([num, title, desc]) => <article key={num}><b>{num}</b><i /><h3>{title}</h3><p>{desc}</p></article>)}</div><div className="beta-callout"><div><Clock3 /><span><b>第一次只聊 15 分钟</b><small>先判断你的痛点和产品是否匹配，不直接发长协议。</small></span></div><a href="/login">微信扫码加入 <ArrowRight /></a></div></section>
 
-          <aside className="signal-panel">
-            <div className="panel-heading compact"><div><span className="panel-kicker">TEAM SIGNAL</span><h2>需要关注</h2></div><span className="signal-count">{String(dashboard.counts.openIssues).padStart(2, '0')}</span></div>
-            <div className="issue-list">
-              {recentIssues.slice(0, 3).map((issue) => (
-                <article key={String(issue.id)}><div className="issue-status"><span>{issue.severity}</span><b>{statusLabels[String(issue.status)] ?? issue.status}</b></div><h3>{issue.title}</h3><p>{new Date(Number(issue.updated_at)).toLocaleDateString('zh-CN')}</p></article>
-              ))}
-            </div>
-            <a className="all-issues" href="/issues">查看全部问题 <ChevronRight /></a>
-          </aside>
-        </div>
-      </section>
-    </main>
-  );
+    <footer className="canvas-footer"><Brand /><p>AI for everyone. Your data stays home, your creativity never queues.</p><div><a href="/projects">共创项目</a><a href="/workflows">工作流</a><a href="/issues">问题反馈</a><a href="https://siltok-ai.com/products/ai-station">AI Station</a></div></footer>
+  </main>;
 }

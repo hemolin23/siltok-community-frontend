@@ -1,10 +1,11 @@
 import { env } from 'cloudflare:workers';
 import { NextResponse } from 'next/server';
-import { getPreviewUserId, getReadyDb } from '@/db/runtime';
+import { getReadyDb } from '@/db/runtime';
+import { resolveActorId } from '@/lib/auth';
 import { apiError } from '@/lib/http';
 
 const MAX_UPLOAD_BYTES = 50 * 1024 * 1024;
-const ALLOWED_VISIBILITY = new Set(['private', 'team', 'community']);
+const ALLOWED_VISIBILITY = new Set(['private', 'team', 'beta', 'public']);
 const ALLOWED_TYPES = new Set([
   'application/json', 'application/zip', 'text/plain', 'image/jpeg', 'image/png',
   'image/webp', 'video/mp4', 'audio/mpeg', 'audio/mp4', 'audio/wav',
@@ -23,9 +24,10 @@ export async function POST(request: Request) {
     if (!['issue', 'project', 'workflow'].includes(entityType)) return NextResponse.json({ error: '附件归属无效' }, { status: 400 });
     if (!ALLOWED_VISIBILITY.has(visibility)) return NextResponse.json({ error: '附件可见范围无效' }, { status: 400 });
 
+    const actorId = await resolveActorId(request);
     const attachmentId = `att_${crypto.randomUUID()}`;
     const safeName = file.name.replace(/[^a-zA-Z0-9._-]+/g, '_').slice(-120) || 'attachment';
-    const objectKey = `private/${getPreviewUserId()}/${entityType}/${entityId}/${attachmentId}-${safeName}`;
+    const objectKey = `private/${actorId}/${entityType}/${entityId}/${attachmentId}-${safeName}`;
     await env.FILES.put(objectKey, file.stream(), { httpMetadata: { contentType: file.type } });
 
     const db = await getReadyDb();
@@ -33,7 +35,7 @@ export async function POST(request: Request) {
     await db.prepare(`INSERT INTO attachments
       (id, owner_id, ${columns[entityType as keyof typeof columns]}, filename, object_key, content_type, byte_size, visibility, created_at)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-      .bind(attachmentId, getPreviewUserId(), entityId === 'unassigned' ? null : entityId, file.name, objectKey, file.type, file.size, visibility, Date.now())
+      .bind(attachmentId, actorId, entityId === 'unassigned' ? null : entityId, file.name, objectKey, file.type, file.size, visibility, Date.now())
       .run();
     return NextResponse.json({ id: attachmentId, filename: file.name, byteSize: file.size }, { status: 201 });
   } catch (error) {

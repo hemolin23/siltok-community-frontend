@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { apiError } from '@/lib/http';
 import { createProject, listProjects } from '@/lib/records';
+import { resolveActorId } from '@/lib/auth';
 
 const projectSchema = z.object({
   title: z.string().trim().min(2).max(80),
@@ -23,7 +24,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const input = projectSchema.parse(await request.json());
-    return NextResponse.json(await createProject(input), { status: 201 });
+    return NextResponse.json(await createProject(input, await resolveActorId(request)), { status: 201 });
   } catch (error) {
     return apiError(error);
   }

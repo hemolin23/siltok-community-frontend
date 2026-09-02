@@ -66,14 +66,14 @@ export async function listProjects() {
   return result.results;
 }
 
-export async function createProject(input: ProjectInput) {
+export async function createProject(input: ProjectInput, ownerId = getPreviewUserId()) {
   const db = await getReadyDb();
   const id = `prj_${crypto.randomUUID()}`;
   const now = Date.now();
   await db.prepare(`INSERT INTO projects
     (id, owner_id, title, scenario, summary, current_solution, goal, status, visibility, created_at, updated_at)
     VALUES (?, ?, ?, ?, ?, ?, ?, 'first_version', ?, ?, ?)`)
-    .bind(id, getPreviewUserId(), input.title, input.scenario, input.summary, input.currentSolution ?? null, input.goal ?? null, input.visibility, now, now)
+    .bind(id, ownerId, input.title, input.scenario, input.summary, input.currentSolution ?? null, input.goal ?? null, input.visibility, now, now)
     .run();
   return { id, ...input, status: 'first_version', createdAt: now };
 }
@@ -89,7 +89,7 @@ export async function listWorkflows() {
   return result.results;
 }
 
-export async function createWorkflow(input: WorkflowInput) {
+export async function createWorkflow(input: WorkflowInput, ownerId = getPreviewUserId()) {
   const db = await getReadyDb();
   const id = `wf_${crypto.randomUUID()}`;
   const versionId = `wfv_${crypto.randomUUID()}`;
@@ -98,7 +98,7 @@ export async function createWorkflow(input: WorkflowInput) {
     db.prepare(`INSERT INTO workflows
       (id, owner_id, project_id, title, scenario, model_name, hardware_sku, latest_version, status, visibility, created_at, updated_at)
       VALUES (?, ?, ?, ?, ?, ?, ?, 1, 'draft', ?, ?, ?)`)
-      .bind(id, getPreviewUserId(), input.projectId ?? null, input.title, input.scenario, input.modelName, input.hardwareSku ?? null, input.visibility, now, now),
+      .bind(id, ownerId, input.projectId ?? null, input.title, input.scenario, input.modelName, input.hardwareSku ?? null, input.visibility, now, now),
     db.prepare(`INSERT INTO workflow_versions
       (id, workflow_id, version, quantization, parameters_json, changelog, created_at)
       VALUES (?, ?, 1, ?, ?, ?, ?)`)
@@ -119,14 +119,14 @@ export async function listIssues() {
   return result.results;
 }
 
-export async function createIssue(input: IssueInput) {
+export async function createIssue(input: IssueInput, reporterId = getPreviewUserId()) {
   const db = await getReadyDb();
   const id = `iss_${crypto.randomUUID()}`;
   const now = Date.now();
   await db.prepare(`INSERT INTO issues
     (id, reporter_id, project_id, workflow_id, title, category, severity, status, description, expected_result, actual_result, visibility, created_at, updated_at)
     VALUES (?, ?, ?, ?, ?, ?, ?, 'triage', ?, ?, ?, ?, ?, ?)`)
-    .bind(id, getPreviewUserId(), input.projectId ?? null, input.workflowId ?? null, input.title, input.category, input.severity, input.description, input.expectedResult ?? null, input.actualResult ?? null, input.visibility, now, now)
+    .bind(id, reporterId, input.projectId ?? null, input.workflowId ?? null, input.title, input.category, input.severity, input.description, input.expectedResult ?? null, input.actualResult ?? null, input.visibility, now, now)
     .run();
   return { id, ...input, status: 'triage', createdAt: now };
 }

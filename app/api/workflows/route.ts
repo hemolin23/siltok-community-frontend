@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { apiError } from '@/lib/http';
 import { createWorkflow, listWorkflows } from '@/lib/records';
+import { resolveActorId } from '@/lib/auth';
 
 const workflowSchema = z.object({
   title: z.string().trim().min(2).max(100),
@@ -27,7 +28,7 @@ export async function POST(request: Request) {
   try {
     const input = workflowSchema.parse(await request.json());
     if (input.parametersJson) JSON.parse(input.parametersJson);
-    return NextResponse.json(await createWorkflow(input), { status: 201 });
+    return NextResponse.json(await createWorkflow(input, await resolveActorId(request)), { status: 201 });
   } catch (error) {
     return apiError(error);
   }

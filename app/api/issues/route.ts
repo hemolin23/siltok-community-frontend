@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { apiError } from '@/lib/http';
 import { createIssue, listIssues } from '@/lib/records';
+import { resolveActorId } from '@/lib/auth';
 
 const issueSchema = z.object({
   title: z.string().trim().min(2).max(120),
@@ -25,7 +26,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    return NextResponse.json(await createIssue(issueSchema.parse(await request.json())), { status: 201 });
+    return NextResponse.json(await createIssue(issueSchema.parse(await request.json()), await resolveActorId(request)), { status: 201 });
   } catch (error) {
     return apiError(error);
   }
