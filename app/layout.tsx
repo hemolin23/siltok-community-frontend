@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://siltok-lab.qingyu-lu-ai.chatgpt.site'),
   title: 'Siltok Lab｜真实工作流共创与模型测试',
   description: '面向本地 AI 创作者和开发者的工作流共创、真实测评与产品支持平台。',
   openGraph: {
