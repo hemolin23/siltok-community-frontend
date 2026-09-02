@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Siltok Lab — 本地 AI 创作工作站的用户共创、工作流和经验社区。" />
+  <meta name="theme-color" content="#030608" />
+  <title>Siltok Lab · AI 创作共创社区</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="launch-ribbon"><i></i>Siltok AI Station 首批共创计划开放中 <button data-go="workflows">查看真实工作流 →</button></div>
+  <header class="site-header">
+    <button class="brand" data-go="home"><b>S</b><span><strong>SILTOK</strong><small>LAB</small></span></button>
+    <nav aria-label="产品导航">
+      <button class="active" data-go="home">首页</button>
+      <button data-go="workflows">工作流</button>
+      <button data-go="experience">经验库</button>
+      <button data-go="issues">问题反馈</button>
+      <button data-go="admin">运营后台</button>
+    </nav>
+    <div class="header-actions"><button class="plain" data-login>手机号登录</button><button class="primary" data-go="workflows">申请内测 ↗</button></div>
+  </header>
+
+  <main>
+    <section class="page active" data-page="home">
+      <div class="hero">
+        <div class="hero-copy"><span class="eyebrow">✦ 为真实创作者而建的本地 AI 共创站</span><h1>把真实工作流，<br>做进你的 <em>AI 主机</em></h1><p>不是让你替我们测试技术。你带来一个正在卡住的商业任务，我们负责迁移、跑通并留下可复用的工作流。</p><div class="hero-actions"><button class="primary large" data-go="workflows">申请远程测试 →</button><button class="secondary" data-go="experience">▷ 查看社区经验</button></div><div class="promises"><span>✓ 不要求好评</span><span>✓ 素材默认私密</span><span>✓ 工作流可带走</span></div></div>
+        <div class="machine-stage">
+          <div class="stage-grid"></div><div class="stage-orbit one"></div><div class="stage-orbit two"></div><strong>WAN 2.2</strong><small>× SILTOK SPEED</small>
+          <div class="run-card"><span><i></i> LIVE RUN</span><b>Wan2.2 FP8</b><small>Siltok Pro · Speed 0.3.1</small></div>
+          <div class="metric-card"><span>可用片段</span><b>9/12</b><small>失败同样被记录</small></div>
+        </div>
+      </div>
+      <div class="proof"><div><b>◫</b><span><strong>本地运行</strong><small>数据不离开设备</small></span></div><div><b>⌁</b><span><strong>真实实测</strong><small>速度、质量与失败率</small></span></div><div><b>▦</b><span><strong>专属工作流</strong><small>由团队迁移和优化</small></span></div><div><b>◎</b><span><strong>灵活使用</strong><small>远程、租用与置换</small></span></div></div>
+      <section class="position"><span>WHAT SILTOK REALLY SELLS</span><div><h2>不是一台堆配置的电脑。</h2><p>产品品类是<strong>本地 AI 创作工作站</strong>；用户真正购买的是<strong>开箱即用、稳定可控的 AI 视频内容生产方案</strong>。硬件、Silitok Speed、Skill、工作流、模板更新和技术服务共同构成产品。</p></div></section>
+      <section class="module-section"><header><span>SILTOK CREATOR KIT</span><h2>从业务目标开始，而不是从节点开始。</h2><p>把创作者的高频判断沉淀成 Skill，让模型、硬件和工作流自动匹配。</p></header><div class="module-grid"><article><b>01 · SKILL</b><h3>角色一致性导演</h3><p>把角色卡、景别、参考帧与失败重试固化为导演步骤。</p><small>MiniMax H3 / Wan2.2</small></article><article><b>02 · WORKFLOW</b><h3>AI 短剧生产线</h3><p>从剧本、分镜、视频生成到可用率记录的完整交付链路。</p><small>Siltok Pro · VERIFIED</small></article><article><b>03 · DIAGNOSIS</b><h3>生成失败诊断</h3><p>根据日志、显存峰值和失败样片，给出逐项复现路径。</p><small>Lite / Pro · READY</small></article></div></section>
+    </section>
+
+    <section class="page workspace" data-page="workflows">
+      <aside><span>共创社区</span><button class="active">工作流分享</button><button data-go="experience">经验与教程</button><button data-go="issues">问题与负反馈</button><div><small>REMOTE BETA</small><b>把真实任务带进来</b><p>我们负责迁移、跑通和记录，你带走工作流与对比结果。</p></div></aside>
+      <div class="workspace-main"><header><span>VERIFIED WORKFLOWS</span><h1>工作流共创库</h1><p>每个版本都记录模型、硬件、参数、真实运行与失败证据。</p></header><div class="toolbar"><b>全部 6</b><span>剧情短片</span><span>电商素材</span><span>低显存</span><span>问题诊断</span></div><div id="workflow-list" class="workflow-list"></div></div>
+    </section>
+
+    <section class="page workspace" data-page="experience">
+      <aside><span>公开知识</span><button data-go="workflows">工作流分享</button><button class="active">经验与教程</button><button data-go="issues">问题与负反馈</button><div><small>SOURCE POLICY</small><b>保留来源，不冒充用户</b><p>公开内容只做编辑摘要；正式模板必须经过授权和真机复现。</p></div></aside>
+      <div class="workspace-main"><header><span>PUBLIC KNOWLEDGE</span><h1>AI 视频经验库</h1><p>从公开教程、模型实测和排错内容中提炼可复用经验。</p></header><div class="disclosure"><b>✓ 公开内容整理，不代表原作者加入 Siltok 社区</b><p>所有内容保留平台和原作者；这里展示学习线索，不提供未经授权的文件。</p></div><div class="toolbar"><b>精选 8</b><span>MiniMax H3</span><span>Wan2.2</span><span>LTX-2.3</span><span>ComfyUI</span></div><div id="experience-grid" class="experience-grid"></div></div>
+    </section>
+
+    <section class="page workspace" data-page="issues">
+      <aside><span>证据系统</span><button data-go="workflows">工作流分享</button><button data-go="experience">经验与教程</button><button class="active">问题与负反馈</button><div><small>NEGATIVE FIRST</small><b>失败也值得被看见</b><p>不要求正面评价。能复现的问题，才有机会变成产品能力。</p></div></aside>
+      <div class="workspace-main"><header><span>ISSUE TRACKER</span><h1>问题与负反馈</h1><p>按影响交付程度排序，并持续记录复现、处理与版本状态。</p></header><div class="issue-stats"><article><small>待分诊</small><b>12</b></article><article><small>已复现</small><b>8</b></article><article><small>处理中</small><b>5</b></article><article><small>本周解决</small><b>11</b></article></div><div id="issue-list" class="issue-list"></div></div>
+    </section>
+
+    <section class="page workspace" data-page="admin">
+      <aside><span>运营工作台</span><button class="active">数据总览</button><button>注册用户</button><button>用户上传</button><button>建联记录</button><div><small>OWNER VIEW</small><b>联系方式加密保存</b><p>手机号仅在管理员接口解密，公开页面无法读取。</p></div></aside>
+      <div class="workspace-main"><header><span>SILTOK OPERATIONS</span><h1>用户与内容后台</h1><p>公开网页中的后台为演示数据，不连接真实手机号和用户文件。</p></header><div class="admin-note">◉ 当前为公开展示模式 · 所有姓名、手机号与登录记录均为虚构示例</div><div class="admin-counts"><article><span>用户</span><b>128</b></article><article><span>项目</span><b>26</b></article><article><span>工作流</span><b>47</b></article><article><span>问题</span><b>83</b></article><article><span>上传文件</span><b>216</b></article><article><span>经验帖</span><b>36</b></article></div><section class="admin-table"><header><b>最近注册用户</b><small>联系方式 · 来源 · 阶段 · 最近活动</small></header><div class="table-row head"><span>用户</span><span>手机号</span><span>用户类型</span><span>当前阶段</span><span>最近活动</span></div><div class="table-row"><b>林导演</b><span>138****4821</span><span>AI 短剧</span><span class="cyan">深度测试</span><span>12 分钟前</span></div><div class="table-row"><b>陈制作</b><span>186****0927</span><span>电商投流</span><span>完成建联</span><span>1 小时前</span></div><div class="table-row"><b>北岛工作室</b><span>159****3360</span><span>漫剧团队</span><span>待访谈</span><span>昨天</span></div><div class="table-row"><b>小满 AI</b><span>137****8012</span><span>ComfyUI</span><span>新注册</span><span>2 天前</span></div></section></div>
+    </section>
+  </main>
+
+  <footer><button class="brand" data-go="home"><b>S</b><span><strong>SILTOK</strong><small>LAB</small></span></button><p>Your data stays home, your creativity never queues.</p><a href="https://github.com/hemolin23/siltok-community-frontend" target="_blank" rel="noreferrer">GitHub 源码 ↗</a></footer>
+
+  <dialog id="login-dialog"><button class="dialog-close" aria-label="关闭">×</button><span>CREATOR ACCESS</span><h2>手机号验证码登录</h2><p>这是公开前端展示版，不会真实发送短信。</p><label>中国大陆手机号<div><b>+86</b><input inputmode="numeric" maxlength="11" placeholder="请输入手机号"></div></label><button class="primary large demo-submit">获取演示验证码 →</button><small>正式版将接入腾讯云短信，并对手机号加密保存。</small></dialog>
+  <div id="toast" role="status"></div>
+  <script src="./app.js"></script>
+</body>
+</html>
