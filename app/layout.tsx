@@ -4,10 +4,10 @@ import './globals.css';
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://siltok-lab.qingyu-lu-ai.chatgpt.site'),
   title: 'Siltok Lab｜把真实工作流，做进你的 AI 主机',
-  description: '面向 AI 短剧、电商与内容创作者的真实项目共创、远程设备测试、工作流分享与问题闭环平台。',
+  description: '面向 AI 短剧、电商与内容创作者的本地 AI 创作工作站社区，提供真实项目共创、Skill 与工作流模板、远程设备测试和问题闭环。',
   openGraph: {
     title: 'Siltok Lab｜把真实工作流变成产品能力',
-    description: '带来一个真实任务，由 Siltok 团队完成工作流迁移、远程真机测试与问题闭环。',
+    description: '从真实任务出发，调用 Skill 与工作流模板，由 Siltok 团队完成迁移、远程真机测试与问题闭环。',
     images: [{ url: '/og.png', width: 1200, height: 630, alt: 'Siltok Lab 工作流共创与模型测试平台' }],
     locale: 'zh_CN',
     type: 'website',

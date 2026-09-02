@@ -89,6 +89,38 @@ export async function listWorkflows() {
   return result.results;
 }
 
+export async function listTemplates() {
+  const db = await getReadyDb();
+  const result = await db.prepare(`SELECT t.*, u.display_name AS owner_name,
+      (SELECT COUNT(*) FROM template_installs ti WHERE ti.template_id = t.id) AS saved_count
+    FROM templates t JOIN users u ON u.id = t.owner_id
+    WHERE t.visibility = 'public'
+    ORDER BY CASE t.status WHEN 'ready' THEN 0 WHEN 'beta' THEN 1 ELSE 2 END, t.install_count DESC, t.updated_at DESC`).all();
+  return result.results;
+}
+
+export async function getTemplateBySlug(slug: string) {
+  const db = await getReadyDb();
+  return db.prepare(`SELECT t.*, u.display_name AS owner_name
+    FROM templates t JOIN users u ON u.id = t.owner_id
+    WHERE t.slug = ? AND t.visibility = 'public' LIMIT 1`).bind(slug).first();
+}
+
+export async function saveTemplate(templateId: string, userId = getPreviewUserId()) {
+  const db = await getReadyDb();
+  const template = await db.prepare(`SELECT id FROM templates WHERE id = ? AND visibility = 'public'`).bind(templateId).first();
+  if (!template) return false;
+  const id = `tpi_${crypto.randomUUID()}`;
+  const result = await db.batch([
+    db.prepare(`INSERT OR IGNORE INTO template_installs (id, template_id, user_id, status, installed_at) VALUES (?, ?, ?, 'saved', ?)`)
+      .bind(id, templateId, userId, Date.now()),
+    db.prepare(`UPDATE templates SET install_count = install_count + 1, updated_at = ?
+      WHERE id = ? AND NOT EXISTS (SELECT 1 FROM template_installs WHERE template_id = ? AND user_id = ? AND id <> ?)`)
+      .bind(Date.now(), templateId, templateId, userId, id),
+  ]);
+  return result[0].meta.changes > 0;
+}
+
 export async function createWorkflow(input: WorkflowInput, ownerId = getPreviewUserId()) {
   const db = await getReadyDb();
   const id = `wf_${crypto.randomUUID()}`;

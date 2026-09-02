@@ -114,3 +114,35 @@ export const consents = sqliteTable('consents', {
   grantedAt: integer('granted_at', { mode: 'timestamp_ms' }).notNull(),
   revokedAt: integer('revoked_at', { mode: 'timestamp_ms' }),
 }, (table) => [index('idx_consents_user_type').on(table.userId, table.consentType)]);
+
+export const templates = sqliteTable('templates', {
+  id: text('id').primaryKey(),
+  ownerId: text('owner_id').notNull().references(() => users.id),
+  kind: text('kind').notNull(),
+  slug: text('slug').notNull(),
+  title: text('title').notNull(),
+  category: text('category').notNull(),
+  summary: text('summary').notNull(),
+  modelName: text('model_name'),
+  hardwareSku: text('hardware_sku'),
+  instructions: text('instructions'),
+  inputSchemaJson: text('input_schema_json'),
+  evidenceLevel: text('evidence_level').notNull().default('unverified'),
+  sourceType: text('source_type').notNull().default('official'),
+  status: text('status').notNull().default('beta'),
+  visibility: text('visibility').notNull().default('public'),
+  installCount: integer('install_count').notNull().default(0),
+  createdAt: integer('created_at', { mode: 'timestamp_ms' }).notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp_ms' }).notNull(),
+}, (table) => [
+  uniqueIndex('idx_templates_slug').on(table.slug),
+  index('idx_templates_kind_category').on(table.kind, table.category),
+]);
+
+export const templateInstalls = sqliteTable('template_installs', {
+  id: text('id').primaryKey(),
+  templateId: text('template_id').notNull().references(() => templates.id),
+  userId: text('user_id').notNull().references(() => users.id),
+  status: text('status').notNull().default('saved'),
+  installedAt: integer('installed_at', { mode: 'timestamp_ms' }).notNull(),
+}, (table) => [uniqueIndex('idx_template_installs_unique').on(table.templateId, table.userId)]);
