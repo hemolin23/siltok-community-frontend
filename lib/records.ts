@@ -99,6 +99,18 @@ export async function listTemplates() {
   return result.results;
 }
 
+export async function listCommunityPosts(limit = 60) {
+  const db = await getReadyDb();
+  const safeLimit = Math.max(1, Math.min(100, Math.trunc(limit)));
+  const result = await db.prepare(`SELECT id, source_platform, source_post_id, source_url,
+      source_creator_name, original_title, summary, key_lessons, scenario, content_type,
+      model_names, source_score, collected_at
+    FROM community_posts
+    WHERE visibility = 'public' AND status = 'published'
+    ORDER BY source_score DESC, created_at DESC LIMIT ?`).bind(safeLimit).all();
+  return result.results;
+}
+
 export async function getTemplateBySlug(slug: string) {
   const db = await getReadyDb();
   return db.prepare(`SELECT t.*, u.display_name AS owner_name

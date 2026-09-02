@@ -28,8 +28,8 @@ function SiteHeader() {
     <div className="launch-ribbon"><span>●</span> Siltok AI Station 首批共创计划开放中 <a href="/#beta">查看测试权益 <ArrowRight /></a></div>
     <header className="canvas-header">
       <Brand />
-      <nav aria-label="主要导航"><a className="active" href="/">首页</a><a href="/projects">共创项目</a><a href="/workflows">工作流</a><a href="/templates">Skill 模板</a><a href="/issues">问题反馈</a><a href="/#benchmarks">模型实测</a></nav>
-      <div className="header-actions"><a className="quiet-action" href="/login"><MessageCircle /> 微信登录</a><a className="neon-action" href="/new?type=project">申请内测 <ArrowRight /></a></div>
+      <nav aria-label="主要导航"><a className="active" href="/">首页</a><a href="/projects">共创项目</a><a href="/workflows">工作流</a><a href="/templates">Skill 模板</a><a href="/experience">经验库</a><a href="/issues">问题反馈</a></nav>
+      <div className="header-actions"><a className="quiet-action" href="/login"><MessageCircle /> 手机登录</a><a className="neon-action" href="/new?type=project">申请内测 <ArrowRight /></a></div>
     </header>
   </>;
 }
@@ -107,6 +107,6 @@ export default async function Home() {
 
     <section className="beta-section" id="beta"><header><span>REMOTE BETA</span><h2>测试不是填一张长表，<br />而是一起完成一次真实交付。</h2></header><div className="beta-steps">{process.map(([num, title, desc]) => <article key={num}><b>{num}</b><i /><h3>{title}</h3><p>{desc}</p></article>)}</div><div className="beta-callout"><div><Clock3 /><span><b>第一次只聊 15 分钟</b><small>先判断你的痛点和产品是否匹配，不直接发长协议。</small></span></div><a href="/login">微信扫码加入 <ArrowRight /></a></div></section>
 
-    <footer className="canvas-footer"><Brand /><p>AI for everyone. Your data stays home, your creativity never queues.</p><div><a href="/projects">共创项目</a><a href="/workflows">工作流</a><a href="/templates">Skill 模板</a><a href="/issues">问题反馈</a><a href="https://siltok-ai.com/products/ai-station">AI Station</a></div></footer>
+    <footer className="canvas-footer"><Brand /><p>AI for everyone. Your data stays home, your creativity never queues.</p><div><a href="/projects">共创项目</a><a href="/workflows">工作流</a><a href="/templates">Skill 模板</a><a href="/experience">经验库</a><a href="/issues">问题反馈</a><a href="https://siltok-ai.com/products/ai-station">AI Station</a></div></footer>
   </main>;
 }

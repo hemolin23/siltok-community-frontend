@@ -2,6 +2,9 @@ import { env } from 'cloudflare:workers';
 import migrationSql from '@/drizzle/0000_noisy_lady_deathstrike.sql?raw';
 import templateMigrationSql from '@/drizzle/0001_template_library.sql?raw';
 import templateCountMigrationSql from '@/drizzle/0002_reset_demo_template_counts.sql?raw';
+import authPostsMigrationSql from '@/drizzle/0003_phone_auth_admin_posts.sql?raw';
+import communityPostSeedSql from '@/drizzle/0004_community_posts_seed.sql?raw';
+import encryptedContactsSql from '@/drizzle/0005_encrypted_user_contacts.sql?raw';
 
 const DEMO_USER_ID = 'usr_demo_sg';
 let initialized: Promise<void> | undefined;
@@ -13,7 +16,7 @@ function getD1() {
 
 async function initialize() {
   const db = getD1();
-  const statements = [migrationSql, templateMigrationSql, templateCountMigrationSql].join('--> statement-breakpoint')
+  const statements = [migrationSql, templateMigrationSql, templateCountMigrationSql, authPostsMigrationSql, communityPostSeedSql, encryptedContactsSql].join('--> statement-breakpoint')
     .split('--> statement-breakpoint')
     .map((statement) => statement.trim())
     .filter(Boolean)

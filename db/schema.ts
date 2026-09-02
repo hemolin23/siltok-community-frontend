@@ -146,3 +146,59 @@ export const templateInstalls = sqliteTable('template_installs', {
   status: text('status').notNull().default('saved'),
   installedAt: integer('installed_at', { mode: 'timestamp_ms' }).notNull(),
 }, (table) => [uniqueIndex('idx_template_installs_unique').on(table.templateId, table.userId)]);
+
+export const phoneVerificationCodes = sqliteTable('phone_verification_codes', {
+  id: text('id').primaryKey(),
+  phoneHash: text('phone_hash').notNull(),
+  ipHash: text('ip_hash').notNull(),
+  codeHash: text('code_hash').notNull(),
+  status: text('status').notNull().default('pending'),
+  attempts: integer('attempts').notNull().default(0),
+  expiresAt: integer('expires_at', { mode: 'timestamp_ms' }).notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp_ms' }).notNull(),
+  usedAt: integer('used_at', { mode: 'timestamp_ms' }),
+}, (table) => [
+  index('idx_phone_codes_phone_created').on(table.phoneHash, table.createdAt),
+  index('idx_phone_codes_ip_created').on(table.ipHash, table.createdAt),
+]);
+
+export const authEvents = sqliteTable('auth_events', {
+  id: text('id').primaryKey(),
+  userId: text('user_id').references(() => users.id),
+  provider: text('provider').notNull(),
+  eventType: text('event_type').notNull(),
+  ipHash: text('ip_hash').notNull(),
+  detail: text('detail'),
+  createdAt: integer('created_at', { mode: 'timestamp_ms' }).notNull(),
+}, (table) => [index('idx_auth_events_created').on(table.createdAt)]);
+
+export const userContacts = sqliteTable('user_contacts', {
+  userId: text('user_id').primaryKey().references(() => users.id),
+  phoneCiphertext: text('phone_ciphertext').notNull(),
+  wechatIdCiphertext: text('wechat_id_ciphertext'),
+  createdAt: integer('created_at', { mode: 'timestamp_ms' }).notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp_ms' }).notNull(),
+});
+
+export const communityPosts = sqliteTable('community_posts', {
+  id: text('id').primaryKey(),
+  sourcePlatform: text('source_platform').notNull(),
+  sourcePostId: text('source_post_id').notNull(),
+  sourceUrl: text('source_url').notNull(),
+  sourceCreatorName: text('source_creator_name').notNull(),
+  originalTitle: text('original_title').notNull(),
+  summary: text('summary').notNull(),
+  keyLessons: text('key_lessons').notNull(),
+  scenario: text('scenario').notNull(),
+  contentType: text('content_type').notNull(),
+  modelNames: text('model_names'),
+  sourceScore: real('source_score').notNull().default(0),
+  status: text('status').notNull().default('published'),
+  visibility: text('visibility').notNull().default('public'),
+  collectedAt: integer('collected_at', { mode: 'timestamp_ms' }).notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp_ms' }).notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp_ms' }).notNull(),
+}, (table) => [
+  uniqueIndex('idx_community_posts_source').on(table.sourcePlatform, table.sourcePostId),
+  index('idx_community_posts_scenario_score').on(table.scenario, table.sourceScore),
+]);

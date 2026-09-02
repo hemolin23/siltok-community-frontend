@@ -1,9 +1,10 @@
-import { Boxes, FileStack, Gauge, MessageCircle, MessageSquareWarning, Plus, Sparkles, Users } from 'lucide-react';
+import { BookOpenText, Boxes, FileStack, Gauge, MessageCircle, MessageSquareWarning, Plus, Sparkles, Users } from 'lucide-react';
 
 const items = [
   { key: 'projects', label: '共创项目', icon: FileStack, href: '/projects' },
   { key: 'workflows', label: '工作流分享', icon: Boxes, href: '/workflows' },
   { key: 'templates', label: 'Skill 与模板', icon: Sparkles, href: '/templates' },
+  { key: 'experience', label: '经验与教程', icon: BookOpenText, href: '/experience' },
   { key: 'issues', label: '问题与负反馈', icon: MessageSquareWarning, href: '/issues' },
   { key: 'benchmarks', label: '模型实测', icon: Gauge, href: '/#benchmarks' },
   { key: 'beta', label: '内测计划', icon: Users, href: '/#beta' },
@@ -24,7 +25,7 @@ export function WorkspaceFrame({ active, eyebrow, title, description, createHref
 }) {
   return <main className="community-shell">
     <div className="launch-ribbon"><span>●</span> Siltok AI Station 首批共创计划开放中 <a href="/#beta">查看测试权益</a></div>
-    <header className="canvas-header community-header"><Brand /><nav><a href="/">首页</a><a className={active === 'projects' ? 'active' : ''} href="/projects">共创项目</a><a className={active === 'workflows' ? 'active' : ''} href="/workflows">工作流</a><a className={active === 'templates' ? 'active' : ''} href="/templates">Skill 模板</a><a className={active === 'issues' ? 'active' : ''} href="/issues">问题反馈</a><a href="/#benchmarks">模型实测</a></nav><div className="header-actions"><a className="quiet-action" href="/login"><MessageCircle /> 微信登录</a><a className="neon-action" href={createHref}><Plus /> {createLabel}</a></div></header>
+    <header className="canvas-header community-header"><Brand /><nav><a href="/">首页</a><a className={active === 'projects' ? 'active' : ''} href="/projects">共创项目</a><a className={active === 'workflows' ? 'active' : ''} href="/workflows">工作流</a><a className={active === 'templates' ? 'active' : ''} href="/templates">Skill 模板</a><a className={active === 'experience' ? 'active' : ''} href="/experience">经验库</a><a className={active === 'issues' ? 'active' : ''} href="/issues">问题反馈</a></nav><div className="header-actions"><a className="quiet-action" href="/login"><MessageCircle /> 手机登录</a><a className="neon-action" href={createHref}><Plus /> {createLabel}</a></div></header>
     <div className="community-layout">
       <aside className="community-sidebar">
         <span className="side-heading">共创社区</span>
